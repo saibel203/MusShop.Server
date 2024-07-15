@@ -6,4 +6,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MusShop.Infrastructure\MusShop.Infrastructure.csproj" />
+    <ProjectReference Include="..\MusShop.Presentation\MusShop.Presentation.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.2-dev-00341" />
+  </ItemGroup>
+
 </Project>
