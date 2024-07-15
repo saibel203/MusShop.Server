@@ -1,11 +1,14 @@
 ﻿using System.Net;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MusShop.Infrastructure.Database;
 using SendGrid;
 using Serilog.Events;
 using Serilog;
 using Serilog.Filters;
 using Serilog.Sinks.Email;
+using Serilog.Sinks.MSSqlServer;
 
 namespace MusShop.Infrastructure;
 
@@ -17,10 +20,13 @@ public static class InfrastructureServicesExtension
     {
         const string outputTemplate =
             "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}";
+        
+        const string infrastructureConnectionString = "InfrastructureConnectionString";
 
         // Register And Setup Logger
         string logFilePath = GetLogFilePath(configuration);
         EmailConnectionInfo emailConnectionInfo = GetEmailConnectionInfoData(configuration);
+        MSSqlServerSinkOptions msSqlSinkOptions = GetMsSqlSinkOptions();
 
         Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Debug()
@@ -45,10 +51,18 @@ public static class InfrastructureServicesExtension
                 .Filter.ByIncludingOnly(Matching.FromSource<TExceptionMiddleware>())
                 .WriteTo.Email(
                     connectionInfo: emailConnectionInfo,
+                    restrictedToMinimumLevel: LogEventLevel.Error)
+                .WriteTo.MSSqlServer(
+                    connectionString: configuration.GetConnectionString(infrastructureConnectionString),
+                    sinkOptions: msSqlSinkOptions,
                     restrictedToMinimumLevel: LogEventLevel.Error))
             .CreateLogger();
 
         services.AddSerilog();
+        
+        // Register Infrastructure DbContext
+        services.AddDbContext<MusShopInfrastructureDbContext>(options =>
+            options.UseSqlServer(configuration.GetConnectionString(infrastructureConnectionString)));
 
         return services;
     }
@@ -105,5 +119,18 @@ public static class InfrastructureServicesExtension
         };
 
         return emailConnectionInfo;
+    }
+
+    private static MSSqlServerSinkOptions GetMsSqlSinkOptions()
+    {
+        const string tableLogsName = "LogEventsData";
+
+        MSSqlServerSinkOptions sinkOptions = new MSSqlServerSinkOptions
+        {
+            TableName = tableLogsName,
+            AutoCreateSqlTable = true
+        };
+
+        return sinkOptions;
     }
 }
