@@ -11,6 +11,11 @@ ConfigurationManager configuration = builder.Configuration;
 builder.Services.AddInfrastructureServices<ExceptionHandlerMiddleware>(configuration);
 builder.Services.AddBaseServices();
 
+ConfigurationManager configuration = builder.Configuration;
+
+builder.Services.AddInfrastructureServices<ExceptionHandlerMiddleware>(configuration);
+builder.Services.AddBaseServices();
+
 WebApplication app = builder.Build();
 IWebHostEnvironment environment = app.Environment;
 
