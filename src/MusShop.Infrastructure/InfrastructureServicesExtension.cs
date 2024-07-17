@@ -9,6 +9,7 @@ using Serilog;
 using Serilog.Filters;
 using Serilog.Sinks.Email;
 using Serilog.Sinks.MSSqlServer;
+using MusShop.Domain.Services.Helpers;
 
 namespace MusShop.Infrastructure;
 
@@ -20,11 +21,11 @@ public static class InfrastructureServicesExtension
     {
         const string outputTemplate =
             "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}";
-        
-        const string infrastructureConnectionString = "InfrastructureConnectionString";
+
+        string infrastructureConnectionString =
+            ConnectionStringHelper.GetInfrastructureDbConnectionString(configuration);
 
         // Register And Setup Logger
-        string logFilePath = GetLogFilePath(configuration);
         EmailConnectionInfo emailConnectionInfo = GetEmailConnectionInfoData(configuration);
         MSSqlServerSinkOptions msSqlSinkOptions = GetMsSqlSinkOptions();
 
@@ -41,49 +42,30 @@ public static class InfrastructureServicesExtension
             .WriteTo.Console(
                 restrictedToMinimumLevel: LogEventLevel.Debug,
                 outputTemplate: outputTemplate)
-            .WriteTo.File(
-                path: logFilePath,
-                rollingInterval: RollingInterval.Day,
-                restrictedToMinimumLevel: LogEventLevel.Information,
-                rollOnFileSizeLimit: true,
-                outputTemplate: outputTemplate)
+            .WriteTo.Seq(
+                serverUrl: "http://musshop-seq:5341",
+                restrictedToMinimumLevel: LogEventLevel.Information)
             .WriteTo.Logger(logger => logger
                 .Filter.ByIncludingOnly(Matching.FromSource<TExceptionMiddleware>())
                 .WriteTo.Email(
                     connectionInfo: emailConnectionInfo,
                     restrictedToMinimumLevel: LogEventLevel.Error)
                 .WriteTo.MSSqlServer(
-                    connectionString: configuration.GetConnectionString(infrastructureConnectionString),
+                    connectionString: infrastructureConnectionString,
                     sinkOptions: msSqlSinkOptions,
                     restrictedToMinimumLevel: LogEventLevel.Error))
             .CreateLogger();
 
         services.AddSerilog();
-        
+
         // Register Infrastructure DbContext
         services.AddDbContext<MusShopInfrastructureDbContext>(options =>
-            options.UseSqlServer(configuration.GetConnectionString(infrastructureConnectionString)));
+            options.UseSqlServer(infrastructureConnectionString));
+
+        // Register SeedDatabase Service
+        services.AddScoped<SeedInfrastructureDbContext>();
 
         return services;
-    }
-
-    private static string GetLogFilePath(IConfiguration configuration)
-    {
-        const string currentProjectName = "ApplicationNames:Infrastructure";
-        const string logsPath = "Paths:LogPath";
-
-        string workingDirectory = AppDomain.CurrentDomain.BaseDirectory;
-        string? projectDirectory = Directory.GetParent(workingDirectory)?.Parent?.Parent?.Parent?.Parent?.FullName;
-
-        if (projectDirectory is null)
-        {
-            throw new DirectoryNotFoundException();
-        }
-
-        string logFilePath = Path.Combine(projectDirectory, configuration[currentProjectName] ?? string.Empty,
-            configuration[logsPath] ?? string.Empty);
-
-        return logFilePath;
     }
 
     private static EmailConnectionInfo GetEmailConnectionInfoData(IConfiguration configuration)
@@ -94,16 +76,16 @@ public static class InfrastructureServicesExtension
         const string fromNameEmailConfiguration = "SmtpErrorsConfiguration:FromName";
         const string portEmailConfiguration = "SmtpErrorsConfiguration:Port";
         const string sslEmailConfiguration = "SmtpErrorsConfiguration:EnableSsl";
-        
+
         const string applicationEmailPasswordConfiguration = "SmtpErrorsConfiguration:GoogleApplicationPassword";
         const string sendGridApiKey = "SendGridOptions:ApiSecretKey";
-        
+
         NetworkCredential networkCredential = new NetworkCredential
         {
             UserName = configuration[fromEmailConfiguration],
             Password = configuration[applicationEmailPasswordConfiguration]
         };
-        
+
         SendGridClient sendGridClient = new SendGridClient(configuration[sendGridApiKey]);
 
         EmailConnectionInfo emailConnectionInfo = new EmailConnectionInfo
@@ -127,8 +109,7 @@ public static class InfrastructureServicesExtension
 
         MSSqlServerSinkOptions sinkOptions = new MSSqlServerSinkOptions
         {
-            TableName = tableLogsName,
-            AutoCreateSqlTable = true
+            TableName = tableLogsName
         };
 
         return sinkOptions;

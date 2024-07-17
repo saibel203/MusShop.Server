@@ -16,4 +16,10 @@ public class TestController : BaseController
         var y = 0;
         return Ok(x / y);
     }
+
+    [HttpGet("Test2")]
+    public IActionResult Test2()
+    {
+        return Ok("Hello world!");
+    }
 }

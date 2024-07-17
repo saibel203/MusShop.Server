@@ -7,10 +7,16 @@ using Serilog.Events;
 
 namespace MusShop.Presentation.Middlewares;
 
-public class ExceptionHandlerMiddleware(RequestDelegate next)
+public class ExceptionHandlerMiddleware
 {
+    private readonly RequestDelegate _next;
     private readonly ILogger _logger = Log.ForContext<ExceptionHandlerMiddleware>();
     private const string MessageTemplate = "HTTP {Domain} {RequestMethod} {StatusCode} {RequestPath}";
+
+    public ExceptionHandlerMiddleware(RequestDelegate next)
+    {
+        _next = next;
+    }
 
     public async Task InvokeAsync(HttpContext httpContext)
     {
@@ -25,7 +31,7 @@ public class ExceptionHandlerMiddleware(RequestDelegate next)
 
             httpContext.Response.Body = responseBodyStream;
 
-            await next(httpContext);
+            await _next(httpContext);
 
             responseBodyStream.Seek(0, SeekOrigin.Begin);
             string responseBody = await new StreamReader(responseBodyStream).ReadToEndAsync();
