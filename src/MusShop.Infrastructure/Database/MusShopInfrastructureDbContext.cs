@@ -2,5 +2,9 @@
 
 namespace MusShop.Infrastructure.Database;
 
-public class MusShopInfrastructureDbContext(DbContextOptions<MusShopInfrastructureDbContext> options)
-    : DbContext(options);
+public class MusShopInfrastructureDbContext : DbContext
+{
+    public MusShopInfrastructureDbContext(DbContextOptions<MusShopInfrastructureDbContext> options) : base(options)
+    {
+    }
+}
