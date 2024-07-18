@@ -10,6 +10,7 @@ WORKDIR /src
 COPY ["src/MusShop.Api/MusShop.Api.csproj", "src/MusShop.Api/"]
 COPY ["src/MusShop.Infrastructure/MusShop.Infrastructure.csproj", "src/MusShop.Infrastructure/"]
 COPY ["src/MusShop.Presentation/MusShop.Presentation.csproj", "src/MusShop.Presentation/"]
+COPY ["src/MusShop.Application.UseCases/MusShop.Application.UseCases.csproj", "src/MusShop.Application.UseCases/"]
 RUN dotnet restore "src/MusShop.Api/MusShop.Api.csproj"
 COPY . .
 WORKDIR "/src/src/MusShop.Api"

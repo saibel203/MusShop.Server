@@ -1,6 +1,7 @@
 using Hangfire;
 using Hangfire.Dashboard;
 using MusShop.Api;
+using MusShop.Application.UseCases;
 using MusShop.Infrastructure;
 using MusShop.Infrastructure.Database;
 using MusShop.Jobs;
@@ -12,6 +13,7 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
 
 builder.Services.AddInfrastructureServices<ExceptionHandlerMiddleware>(configuration);
+builder.Services.AddApplicationServices();
 builder.Services.AddBaseServices();
 
 WebApplication app = builder.Build();
