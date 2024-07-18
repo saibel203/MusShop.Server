@@ -12,7 +12,8 @@ public static class ConnectionStringHelper
         string password = configuration["InfrastructureDBPassword"] ?? "123456a@";
         string databaseName = configuration["InfrastructureDBName"] ?? "MusShop.Infrastructure";
 
-        string resultString = $"Server={server},{port};Initial Catalog={databaseName};User ID={user};Password={password};TrustServerCertificate=True";
+        string resultString =
+            $"Server={server},{port};Initial Catalog={databaseName};User ID={user};Password={password};TrustServerCertificate=True";
 
         return resultString;
     }

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MusShop.Infrastructure.Database;
 
@@ -10,9 +11,11 @@ using MusShop.Infrastructure.Database;
 namespace MusShop.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(MusShopInfrastructureDbContext))]
-    partial class MusShopInfrastructureDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240717183013_ProcedureForClearLogsTable")]
+    partial class ProcedureForClearLogsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

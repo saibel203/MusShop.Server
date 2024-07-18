@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Hangfire" Version="1.8.14" />
+    <PackageReference Include="Hangfire.Console.Extensions.Serilog" Version="2.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.20" />
     <PackageReference Include="Serilog" Version="4.0.1-dev-02205" />
     <PackageReference Include="Serilog.AspNetCore" Version="8.0.2-dev-00341" />
@@ -25,7 +27,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MusShop.Domain.Model\MusShop.Domain.Model.csproj" />
     <ProjectReference Include="..\MusShop.Domain.Services\MusShop.Domain.Services.csproj" />
+    <ProjectReference Include="..\MusShop.Jobs\MusShop.Jobs.csproj" />
   </ItemGroup>
 
 </Project>
