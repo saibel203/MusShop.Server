@@ -1,7 +1,9 @@
 ﻿using System.Net;
+using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MusShop.Domain.Model.InfrastructureServiceAbstractions;
 using MusShop.Infrastructure.Database;
 using SendGrid;
 using Serilog.Events;
@@ -10,6 +12,7 @@ using Serilog.Filters;
 using Serilog.Sinks.Email;
 using Serilog.Sinks.MSSqlServer;
 using MusShop.Domain.Services.Helpers;
+using MusShop.Infrastructure.Services;
 
 namespace MusShop.Infrastructure;
 
@@ -64,6 +67,18 @@ public static class InfrastructureServicesExtension
 
         // Register SeedDatabase Service
         services.AddScoped<SeedInfrastructureDbContext>();
+        
+        // Register InfrastructureServices
+        services.AddTransient<IRestoreLogsTableService, RestoreLogsTableService>();
+        
+        // Register Hangfire Jobs
+        services.AddHangfire(hangfireConfiguration =>
+            hangfireConfiguration.SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+                .UseSerilogLogProvider()
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UseSqlServerStorage(infrastructureConnectionString));
+        services.AddHangfireServer();
 
         return services;
     }

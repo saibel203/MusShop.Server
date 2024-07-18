@@ -43,6 +43,11 @@ ALTER ROLE [SerilogWriter] ADD MEMBER [Serilog];
 
 GRANT SELECT ON [dbo].[LogEventsData] TO [SerilogWriter];
 GRANT INSERT ON [dbo].[LogEventsData] TO [SerilogWriter];
+GO
+
+CREATE LOGIN [HangFireUser] WITH PASSWORD = '123456a@';
+CREATE USER [HangFireUser] FOR LOGIN [HangFireUser] WITH DEFAULT_SCHEMA = dbo;
+EXEC sp_addrolemember 'db_owner', 'HangFireUser';
 ";
 
             migrationBuilder.Sql(sql);
