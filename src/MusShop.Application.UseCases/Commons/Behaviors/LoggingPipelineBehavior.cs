@@ -1,10 +1,12 @@
 ﻿using MediatR;
+using MusShop.Domain.Model.ResultItems;
 using Serilog;
 
 namespace MusShop.Application.UseCases.Commons.Behaviors;
 
-public class LoggingPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : notnull
+public sealed class LoggingPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    where TRequest : class
+    where TResponse : DomainResult<TRequest>
 {
     private readonly ILogger _logger = Log.ForContext<LoggingPipelineBehavior<TRequest, TResponse>>();
 
