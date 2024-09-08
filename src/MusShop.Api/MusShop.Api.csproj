@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\MusShop.Application.UseCases\MusShop.Application.UseCases.csproj" />
     <ProjectReference Include="..\MusShop.Infrastructure\MusShop.Infrastructure.csproj" />
+    <ProjectReference Include="..\MusShop.Persistence\MusShop.Persistence.csproj" />
     <ProjectReference Include="..\MusShop.Presentation\MusShop.Presentation.csproj" />
   </ItemGroup>
 

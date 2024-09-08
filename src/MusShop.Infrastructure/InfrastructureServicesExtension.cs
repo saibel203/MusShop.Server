@@ -12,6 +12,7 @@ using Serilog.Filters;
 using Serilog.Sinks.Email;
 using Serilog.Sinks.MSSqlServer;
 using MusShop.Domain.Services.Helpers;
+using MusShop.Infrastructure.Database.Seeds;
 using MusShop.Infrastructure.Services;
 
 namespace MusShop.Infrastructure;
@@ -65,12 +66,12 @@ public static class InfrastructureServicesExtension
         services.AddDbContext<MusShopInfrastructureDbContext>(options =>
             options.UseSqlServer(infrastructureConnectionString));
 
-        // Register SeedDatabase Service
-        services.AddScoped<SeedInfrastructureDbContext>();
-        
+        // Register InitializeDatabase Service
+        services.AddScoped<InitializeInfrastructureDbContext>();
+
         // Register InfrastructureServices
         services.AddTransient<IRestoreLogsTableService, RestoreLogsTableService>();
-        
+
         // Register Hangfire Jobs
         services.AddHangfire(hangfireConfiguration =>
             hangfireConfiguration.SetDataCompatibilityLevel(CompatibilityLevel.Version_180)

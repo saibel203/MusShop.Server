@@ -3,8 +3,10 @@ using Hangfire.Dashboard;
 using MusShop.Api;
 using MusShop.Application.UseCases;
 using MusShop.Infrastructure;
-using MusShop.Infrastructure.Database;
+using MusShop.Infrastructure.Database.Seeds;
 using MusShop.Jobs;
+using MusShop.Persistence;
+using MusShop.Persistence.Seeds;
 using MusShop.Presentation.Middlewares;
 using MusShop.Presentation.Middlewares.Extensions;
 using Serilog;
@@ -13,6 +15,7 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
 
 builder.Services.AddInfrastructureServices<ExceptionHandlerMiddleware>(configuration);
+builder.Services.AddPersistenceServices(configuration);
 builder.Services.AddApplicationServices();
 builder.Services.AddBaseServices();
 
@@ -29,9 +32,13 @@ if (environment.IsDevelopment())
 {
     using IServiceScope scope = app.Services.CreateScope();
 
-    SeedInfrastructureDbContext initInfrastructureContextSeed =
-        scope.ServiceProvider.GetRequiredService<SeedInfrastructureDbContext>();
-    await initInfrastructureContextSeed.InitializeDatabaseAsync();
+    InitializeInfrastructureDbContext initInfrastructureContextInitialize =
+        scope.ServiceProvider.GetRequiredService<InitializeInfrastructureDbContext>();
+    await initInfrastructureContextInitialize.InitializeDatabaseAsync();
+
+    InitializeDataDbContext initDataDbContext =
+        scope.ServiceProvider.GetRequiredService<InitializeDataDbContext>();
+    await initDataDbContext.InitializeDatabaseAsync();
 }
 
 app.UseSerilogRequestLogging();
