@@ -9,15 +9,19 @@
   <ItemGroup>
     <PackageReference Include="MediatR" Version="12.3.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
-    <PackageReference Include="Serilog" Version="4.0.1-dev-02205" />
+    <PackageReference Include="Serilog" Version="4.0.2-dev-02226" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <ProjectReference Include="..\MusShop.Application.Dto\MusShop.Application.Dto.csproj" />
     <ProjectReference Include="..\MusShop.Domain.Model\MusShop.Domain.Model.csproj" />
+    <ProjectReference Include="..\MusShop.Persistence\MusShop.Persistence.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\Blog\Categories\Commands\" />
+    <Folder Include="Features\Blog\Posts\Commands\" />
+    <Folder Include="Features\Blog\Posts\Queries\" />
   </ItemGroup>
 
 </Project>

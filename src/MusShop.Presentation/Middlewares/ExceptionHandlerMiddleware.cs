@@ -41,7 +41,8 @@ public class ExceptionHandlerMiddleware
             switch (statusCode)
             {
                 case 404 when
-                    httpContext.Request.Path == "/" || httpContext.Request.Path.StartsWithSegments("/hangfire"):
+                    httpContext.Request.Path == "/" || httpContext.Request.Path.StartsWithSegments("/hangfire") ||
+                    httpContext.Request.Path == "/favicon.ico":
                     break;
                 case > 399:
                 {

@@ -12,4 +12,8 @@
     <PackageReference Include="Mapster.DependencyInjection" Version="1.0.2-pre01" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MusShop.Domain.Model\MusShop.Domain.Model.csproj" />
+  </ItemGroup>
+
 </Project>
