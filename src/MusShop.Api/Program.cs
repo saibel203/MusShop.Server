@@ -1,6 +1,7 @@
 using Hangfire;
 using Hangfire.Dashboard;
 using MusShop.Api;
+using MusShop.Application;
 using MusShop.Application.UseCases;
 using MusShop.Infrastructure;
 using MusShop.Infrastructure.Database.Seeds;
@@ -16,6 +17,7 @@ ConfigurationManager configuration = builder.Configuration;
 
 builder.Services.AddInfrastructureServices<ExceptionHandlerMiddleware>(configuration);
 builder.Services.AddPersistenceServices(configuration);
+builder.Services.AddApplicationMapsterService();
 builder.Services.AddApplicationServices();
 builder.Services.AddBaseServices();
 

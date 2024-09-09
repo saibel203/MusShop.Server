@@ -15,6 +15,7 @@ COPY ["src/MusShop.Infrastructure/MusShop.Domain.Model.csproj", "src/MusShop.Dom
 COPY ["src/MusShop.Infrastructure/MusShop.Domain.Services.csproj", "src/MusShop.Domain.Services/"]
 COPY ["src/MusShop.Presentation/MusShop.Presentation.csproj", "src/MusShop.Presentation/"]
 COPY ["src/MusShop.Application.UseCases/MusShop.Application.UseCases.csproj", "src/MusShop.Application.UseCases/"]
+COPY ["src/MusShop.Application.UseCases/MusShop.Application.Dto.csproj", "src/MusShop.Application.Dto/"]
 RUN dotnet restore "src/MusShop.Api/MusShop.Api.csproj"
 COPY . .
 WORKDIR "/src/src/MusShop.Api"
