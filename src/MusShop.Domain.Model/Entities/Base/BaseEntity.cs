@@ -1,6 +1,6 @@
 ﻿namespace MusShop.Domain.Model.Entities.Base;
 
-public class BaseEntity<TId>
+public class BaseEntity
 {
-    public TId Id { get; }
+    public Guid Id { get; }
 }

@@ -19,7 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Blog\Categories\Commands\" />
     <Folder Include="Features\Blog\Posts\Commands\" />
     <Folder Include="Features\Blog\Posts\Queries\" />
   </ItemGroup>

@@ -1,12 +1,14 @@
 ﻿using MapsterMapper;
 using MediatR;
-using MusShop.Application.Dtos.Blog;
+using MusShop.Application.Dtos.Blog.Category;
 using MusShop.Domain.Model.Entities.Blog;
 using MusShop.Domain.Model.RepositoryAbstractions.Base;
+using MusShop.Domain.Model.ResultItems;
 
 namespace MusShop.Application.UseCases.Features.Blog.Categories.Queries.GetAllCategoriesQuery;
 
-public class GetAllCategoriesHandler : IRequestHandler<GetAllCategoriesQuery, IEnumerable<CategoryDto>>
+public class GetAllCategoriesHandler 
+    : IRequestHandler<GetAllCategoriesQuery, DomainResult<IEnumerable<CategoryDto>>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
@@ -17,12 +19,13 @@ public class GetAllCategoriesHandler : IRequestHandler<GetAllCategoriesQuery, IE
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<CategoryDto>> Handle(GetAllCategoriesQuery request,
+    public async Task<DomainResult<IEnumerable<CategoryDto>>> Handle(GetAllCategoriesQuery request,
         CancellationToken cancellationToken)
     {
-        var categories = await _unitOfWork.Repository().GetAll<Category>();
-        var categoriesDto = _mapper.Map<IEnumerable<CategoryDto>>(categories);
+        IEnumerable<Category> categories =
+            await _unitOfWork.GetRepository<Category>().GetAll();
+        IEnumerable<CategoryDto> categoriesDto = _mapper.Map<IEnumerable<CategoryDto>>(categories);
 
-        return categoriesDto;
+        return DomainResult<IEnumerable<CategoryDto>>.Success(categoriesDto);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace MusShop.Domain.Model.Entities.Blog;
 
-public class Post : EntityMetadata<Guid>
+public class Post : EntityMetadata
 {
     public string Title { get; init; } = string.Empty;
     public string Description { get; init; } = string.Empty;

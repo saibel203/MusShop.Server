@@ -1,4 +1,4 @@
-﻿namespace MusShop.Application.Dtos.Blog;
+﻿namespace MusShop.Application.Dtos.Blog.Category;
 
 public class CategoryDto
 {

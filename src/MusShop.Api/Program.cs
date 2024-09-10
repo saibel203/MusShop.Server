@@ -32,6 +32,9 @@ DashboardOptions hangfireDashboardOptions = new DashboardOptions
 
 if (environment.IsDevelopment())
 {
+    app.UseSwagger();
+    app.UseSwaggerUI();
+    
     using IServiceScope scope = app.Services.CreateScope();
 
     InitializeInfrastructureDbContext initInfrastructureContextInitialize =
@@ -42,9 +45,14 @@ if (environment.IsDevelopment())
         scope.ServiceProvider.GetRequiredService<InitializeDataDbContext>();
     await initDataDbContext.InitializeDatabaseAsync();
 }
+else
+{
+    app.UseHsts();
+}
 
 app.UseSerilogRequestLogging();
 app.UseExceptionMiddleware();
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
@@ -55,6 +63,9 @@ app.UseHangfireDashboard("/hangfire", hangfireDashboardOptions);
 RecurringJob.AddOrUpdate<RestoreLogsDataJob>("restoreLogsDataJob",
     job => job.RestoreLogsData(), Cron.Monthly);
 
+app.UseCors();
+
+app.UseRouting();
 app.MapControllers();
 
 app.Run();
