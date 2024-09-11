@@ -51,11 +51,6 @@ namespace MusShop.Persistence.Migrations
                 name: "IX_Posts_CategoryId",
                 table: "Posts",
                 column: "CategoryId");
-
-            const string sqlSeedFileName = "SeedData.sql";
-            string sqlFilePath = Path.Combine("/app/Seeds", sqlSeedFileName);
-            string sqlFileText = File.ReadAllText(sqlFilePath);
-            migrationBuilder.Sql(sqlFileText);
         }
 
         /// <inheritdoc />

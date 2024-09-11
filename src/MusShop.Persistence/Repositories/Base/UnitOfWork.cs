@@ -1,4 +1,5 @@
-﻿using MusShop.Domain.Model.Entities.Base;
+﻿using Microsoft.EntityFrameworkCore;
+using MusShop.Domain.Model.Entities.Base;
 using MusShop.Domain.Model.RepositoryAbstractions.Base;
 
 namespace MusShop.Persistence.Repositories.Base;
@@ -6,7 +7,7 @@ namespace MusShop.Persistence.Repositories.Base;
 public class UnitOfWork : IUnitOfWork
 {
     private readonly MusShopDataDbContext _context;
-    private Dictionary<Type, object> _repositories;
+    private readonly Dictionary<Type, object> _repositories;
     private bool _disposed;
 
     public UnitOfWork(MusShopDataDbContext context)
@@ -36,6 +37,21 @@ public class UnitOfWork : IUnitOfWork
 
     public Task<int> CommitAsync(CancellationToken cancellationToken)
     {
+        var entries = _context.ChangeTracker
+            .Entries()
+            .Where(e => e is
+                { Entity: BaseEntity, State: EntityState.Added or EntityState.Modified });
+
+        foreach (var entityEntry in entries)
+        {
+            ((BaseEntity)entityEntry.Entity).UpdatedDate = DateTime.UtcNow;
+
+            if (entityEntry.State == EntityState.Added)
+            {
+                ((BaseEntity)entityEntry.Entity).CreatedDate = DateTime.UtcNow;
+            }
+        }
+
         return _context.SaveChangesAsync(cancellationToken);
     }
 

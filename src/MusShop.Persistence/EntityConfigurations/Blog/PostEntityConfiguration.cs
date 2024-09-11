@@ -13,11 +13,11 @@ public class PostEntityConfiguration : IEntityTypeConfiguration<Post>
         builder.Property(property => property.Title)
             .HasColumnType("nvarchar(200)")
             .IsRequired();
-        
+
         builder.Property(property => property.Description)
             .HasColumnType("nvarchar(max)")
             .IsRequired();
-        
+
         builder.Property(property => property.ImageUrl)
             .HasColumnType("nvarchar(1000)")
             .IsRequired(false);
@@ -26,5 +26,11 @@ public class PostEntityConfiguration : IEntityTypeConfiguration<Post>
             .WithMany(property => property.Posts)
             .HasForeignKey(property => property.CategoryId)
             .IsRequired();
+
+        builder.Property(property => property.CreatedDate)
+            .HasDefaultValueSql("getutcdate()");
+
+        builder.Property(property => property.UpdatedDate)
+            .HasDefaultValueSql("getutcdate()");
     }
 }

@@ -13,5 +13,11 @@ public class CategoryEntityConfiguration : IEntityTypeConfiguration<Category>
         builder.Property(property => property.CategoryName)
             .HasColumnType("nvarchar(100)")
             .IsRequired();
+
+        builder.Property(property => property.CreatedDate)
+            .HasDefaultValueSql("getutcdate()");
+
+        builder.Property(property => property.UpdatedDate)
+            .HasDefaultValueSql("getutcdate()");
     }
 }

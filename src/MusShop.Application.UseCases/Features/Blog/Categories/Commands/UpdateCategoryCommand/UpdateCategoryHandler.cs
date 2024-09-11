@@ -1,6 +1,7 @@
 ﻿using MapsterMapper;
 using MediatR;
 using MusShop.Application.Dtos.Blog.Category;
+using MusShop.Application.UseCases.Commons;
 using MusShop.Domain.Model.Entities.Blog;
 using MusShop.Domain.Model.RepositoryAbstractions.Base;
 using MusShop.Domain.Model.ResultItems;
@@ -8,17 +9,13 @@ using MusShop.Domain.Model.ResultItems.ErrorsDocumentation;
 
 namespace MusShop.Application.UseCases.Features.Blog.Categories.Commands.UpdateCategoryCommand;
 
-public class UpdateCategoryHandler : IRequestHandler<UpdateCategoryCommand, DomainResult<CategoryActionDto>>
+public class UpdateCategoryHandler : BaseFeatureConfigs,
+    IRequestHandler<UpdateCategoryCommand, DomainResult<CategoryActionDto>>
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
-
-    public UpdateCategoryHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    public UpdateCategoryHandler(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
     {
-        _unitOfWork = unitOfWork;
-        _mapper = mapper;
     }
-
+    
     public async Task<DomainResult<CategoryActionDto>> Handle(UpdateCategoryCommand request,
         CancellationToken cancellationToken)
     {
@@ -26,18 +23,18 @@ public class UpdateCategoryHandler : IRequestHandler<UpdateCategoryCommand, Doma
         {
             return DomainResult<CategoryActionDto>.Failure(BlogErrors.CategoryNameError);
         }
-        
-        Category? category = await _unitOfWork.GetRepository<Category>().GetById(request.CategoryId);
+
+        Category? category = await UnitOfWork.GetRepository<Category>().GetById(request.CategoryId);
 
         if (category is null)
         {
             return DomainResult<CategoryActionDto>.Failure(BlogErrors.CategoryNotFound);
         }
 
-        _mapper.Map(request.CategoryActionDto, category);
-        
-        _unitOfWork.GetRepository<Category>().Update(category);
-        await _unitOfWork.CommitAsync(cancellationToken);
+        Mapper.Map(request.CategoryActionDto, category);
+
+        UnitOfWork.GetRepository<Category>().Update(category);
+        await UnitOfWork.CommitAsync(cancellationToken);
 
         return DomainResult<CategoryActionDto>.Success(request.CategoryActionDto);
     }

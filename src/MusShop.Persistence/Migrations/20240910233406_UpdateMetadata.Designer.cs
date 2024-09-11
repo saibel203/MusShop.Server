@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MusShop.Persistence;
 
@@ -11,9 +12,11 @@ using MusShop.Persistence;
 namespace MusShop.Persistence.Migrations
 {
     [DbContext(typeof(MusShopDataDbContext))]
-    partial class MusShopDataDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240910233406_UpdateMetadata")]
+    partial class UpdateMetadata
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

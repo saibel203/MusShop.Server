@@ -18,9 +18,4 @@
     <ProjectReference Include="..\MusShop.Persistence\MusShop.Persistence.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\Blog\Posts\Commands\" />
-    <Folder Include="Features\Blog\Posts\Queries\" />
-  </ItemGroup>
-
 </Project>
