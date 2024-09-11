@@ -6,6 +6,9 @@ public static class BaseServicesExtension
     {
         services.AddControllers()
             .AddApplicationPart(typeof(Presentation.AssemblyReference).Assembly);
+        
+        services.AddEndpointsApiExplorer();
+        services.AddSwaggerGen();
 
         return services;
     }

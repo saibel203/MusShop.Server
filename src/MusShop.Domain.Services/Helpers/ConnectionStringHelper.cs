@@ -17,4 +17,18 @@ public static class ConnectionStringHelper
 
         return resultString;
     }
+
+    public static string GetDataDbConnectionString(IConfiguration configuration)
+    {
+        string server = configuration["DataDBServer"] ?? "localhost";
+        string port = configuration["DataDBPort"] ?? "1433";
+        string user = configuration["DataDBUser"] ?? "SA";
+        string password = configuration["DataDBPassword"] ?? "123456a@";
+        string databaseName = configuration["DataDBName"] ?? "MusShop.Data";
+
+        string resultString =
+            $"Server={server},{port};Initial Catalog={databaseName};User ID={user};Password={password};TrustServerCertificate=True";
+
+        return resultString;
+    }
 }

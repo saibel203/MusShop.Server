@@ -14,9 +14,12 @@ services:
       dockerfile: src/MusShop.Api/Dockerfile
     environment:
       InfrastructureDBServer: "musshop.infrastructure.db"
+      DataDBServer: "musshop.infrastructure.db"
     ports:
       - "8080:8080"
       - "80:80"
+    volumes:
+      - ./src/MusShop.Persistence/Seeds:/app/Seeds
   musshop.seq:
     image: datalust/seq:latest
     container_name: musshop-seq

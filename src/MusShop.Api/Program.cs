@@ -1,10 +1,13 @@
 using Hangfire;
 using Hangfire.Dashboard;
 using MusShop.Api;
+using MusShop.Application;
 using MusShop.Application.UseCases;
 using MusShop.Infrastructure;
-using MusShop.Infrastructure.Database;
+using MusShop.Infrastructure.Database.Seeds;
 using MusShop.Jobs;
+using MusShop.Persistence;
+using MusShop.Persistence.Seeds;
 using MusShop.Presentation.Middlewares;
 using MusShop.Presentation.Middlewares.Extensions;
 using Serilog;
@@ -13,6 +16,8 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
 
 builder.Services.AddInfrastructureServices<ExceptionHandlerMiddleware>(configuration);
+builder.Services.AddPersistenceServices(configuration);
+builder.Services.AddApplicationMapsterService();
 builder.Services.AddApplicationServices();
 builder.Services.AddBaseServices();
 
@@ -27,15 +32,27 @@ DashboardOptions hangfireDashboardOptions = new DashboardOptions
 
 if (environment.IsDevelopment())
 {
+    app.UseSwagger();
+    app.UseSwaggerUI();
+    
     using IServiceScope scope = app.Services.CreateScope();
 
-    SeedInfrastructureDbContext initInfrastructureContextSeed =
-        scope.ServiceProvider.GetRequiredService<SeedInfrastructureDbContext>();
-    await initInfrastructureContextSeed.InitializeDatabaseAsync();
+    InitializeInfrastructureDbContext initInfrastructureContextInitialize =
+        scope.ServiceProvider.GetRequiredService<InitializeInfrastructureDbContext>();
+    await initInfrastructureContextInitialize.InitializeDatabaseAsync();
+
+    InitializeDataDbContext initDataDbContext =
+        scope.ServiceProvider.GetRequiredService<InitializeDataDbContext>();
+    await initDataDbContext.InitializeDatabaseAsync();
+}
+else
+{
+    app.UseHsts();
 }
 
 app.UseSerilogRequestLogging();
 app.UseExceptionMiddleware();
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
@@ -46,6 +63,9 @@ app.UseHangfireDashboard("/hangfire", hangfireDashboardOptions);
 RecurringJob.AddOrUpdate<RestoreLogsDataJob>("restoreLogsDataJob",
     job => job.RestoreLogsData(), Cron.Monthly);
 
+app.UseCors();
+
+app.UseRouting();
 app.MapControllers();
 
 app.Run();
