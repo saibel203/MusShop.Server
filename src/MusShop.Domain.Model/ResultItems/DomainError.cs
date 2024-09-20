@@ -1,6 +1,15 @@
-﻿namespace MusShop.Domain.Model.ResultItems;
+﻿using System.Net;
 
-public sealed record DomainError(string Code, string Description)
+namespace MusShop.Domain.Model.ResultItems;
+
+public record DomainError(
+    string Code,
+    string Description,
+    HttpStatusCode StatusCode = HttpStatusCode.BadRequest)
 {
-    public static readonly DomainError None = new DomainError(string.Empty, string.Empty);
+    public static readonly DomainError None =
+        new(string.Empty, string.Empty);
+
+    public static readonly DomainError FewErrors =
+        new(string.Empty, string.Empty);
 }

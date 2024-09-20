@@ -8,6 +8,8 @@ public class PostEntityConfiguration : IEntityTypeConfiguration<Post>
 {
     public void Configure(EntityTypeBuilder<Post> builder)
     {
+        builder.ToTable("blog_posts");
+        
         builder.HasKey(property => property.Id);
 
         builder.Property(property => property.Title)

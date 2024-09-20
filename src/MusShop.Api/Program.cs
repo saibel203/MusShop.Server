@@ -17,7 +17,7 @@ ConfigurationManager configuration = builder.Configuration;
 
 builder.Services.AddInfrastructureServices<ExceptionHandlerMiddleware>(configuration);
 builder.Services.AddPersistenceServices(configuration);
-builder.Services.AddApplicationMapsterService();
+builder.Services.AddApplicationDtoService();
 builder.Services.AddApplicationServices();
 builder.Services.AddBaseServices();
 
