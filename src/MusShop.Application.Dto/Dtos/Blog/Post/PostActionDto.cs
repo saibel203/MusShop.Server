@@ -2,8 +2,8 @@
 
 public class PostActionDto
 {
-    public string Title { get; init; } = string.Empty;
-    public string Description { get; init; } = string.Empty;
-    public string ImageUrl { get; init; } = string.Empty;
-    public Guid CategoryId { get; init; }
+    public string Title { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
+    public string ImageUrl { get; set; } = string.Empty;
+    public Guid CategoryId { get; set; }
 }

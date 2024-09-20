@@ -8,6 +8,8 @@ public class CategoryEntityConfiguration : IEntityTypeConfiguration<Category>
 {
     public void Configure(EntityTypeBuilder<Category> builder)
     {
+        builder.ToTable("blog_categories");
+        
         builder.HasKey(property => property.Id);
 
         builder.Property(property => property.CategoryName)

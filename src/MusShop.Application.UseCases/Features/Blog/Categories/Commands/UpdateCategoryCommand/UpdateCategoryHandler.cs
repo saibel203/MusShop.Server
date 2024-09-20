@@ -19,11 +19,6 @@ public class UpdateCategoryHandler : BaseFeatureConfigs,
     public async Task<DomainResult<CategoryActionDto>> Handle(UpdateCategoryCommand request,
         CancellationToken cancellationToken)
     {
-        if (request.CategoryActionDto.CategoryName.Length is 0 or > 100)
-        {
-            return DomainResult<CategoryActionDto>.Failure(BlogErrors.CategoryNameError);
-        }
-
         Category? category = await UnitOfWork.GetRepository<Category>().GetById(request.CategoryId);
 
         if (category is null)

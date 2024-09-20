@@ -27,6 +27,12 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusShop.Application.UseCases", "src\MusShop.Application.UseCases\MusShop.Application.UseCases.csproj", "{56C38B3A-F251-463C-A8AC-0F92E177ECED}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{2E8BE498-6E95-4001-AB4A-9A7D8385AE9E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusShop.Application.UseCases.UnitTests", "tests\MusShop.Application.UseCases.UnitTests\MusShop.Application.UseCases.UnitTests.csproj", "{7A8629C7-58CA-4F41-B499-AAF65A2FFEDF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusShop.UnitTests.Shared", "tests\MusShop.UnitTests.Shared\MusShop.UnitTests.Shared.csproj", "{1CBCF27B-9466-44B2-981B-F6E6CEB5CEB3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +83,14 @@ Global
 		{56C38B3A-F251-463C-A8AC-0F92E177ECED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56C38B3A-F251-463C-A8AC-0F92E177ECED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{56C38B3A-F251-463C-A8AC-0F92E177ECED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A8629C7-58CA-4F41-B499-AAF65A2FFEDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A8629C7-58CA-4F41-B499-AAF65A2FFEDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A8629C7-58CA-4F41-B499-AAF65A2FFEDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A8629C7-58CA-4F41-B499-AAF65A2FFEDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CBCF27B-9466-44B2-981B-F6E6CEB5CEB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CBCF27B-9466-44B2-981B-F6E6CEB5CEB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CBCF27B-9466-44B2-981B-F6E6CEB5CEB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CBCF27B-9466-44B2-981B-F6E6CEB5CEB3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -92,5 +106,7 @@ Global
 		{581344E2-8290-4D86-9562-1684C6BDE47A} = {50C1CE8B-BD5C-4344-BFAE-20BBC5687984}
 		{615176C5-540F-4E30-A203-563E75E0D424} = {50C1CE8B-BD5C-4344-BFAE-20BBC5687984}
 		{56C38B3A-F251-463C-A8AC-0F92E177ECED} = {50C1CE8B-BD5C-4344-BFAE-20BBC5687984}
+		{7A8629C7-58CA-4F41-B499-AAF65A2FFEDF} = {2E8BE498-6E95-4001-AB4A-9A7D8385AE9E}
+		{1CBCF27B-9466-44B2-981B-F6E6CEB5CEB3} = {2E8BE498-6E95-4001-AB4A-9A7D8385AE9E}
 	EndGlobalSection
 EndGlobal

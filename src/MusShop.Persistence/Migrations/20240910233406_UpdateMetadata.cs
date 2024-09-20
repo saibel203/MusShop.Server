@@ -42,11 +42,6 @@ namespace MusShop.Persistence.Migrations
                 type: "datetime2",
                 nullable: false,
                 defaultValueSql: "getutcdate()");
-            
-            const string sqlSeedFileName = "SeedData.sql";
-            string sqlFilePath = Path.Combine("/app/Seeds", sqlSeedFileName);
-            string sqlFileText = File.ReadAllText(sqlFilePath);
-            migrationBuilder.Sql(sqlFileText);
         }
 
         /// <inheritdoc />

@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using System.Reflection;
+using FluentValidation;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using MusShop.Application.UseCases.Commons.Behaviors;
 
@@ -14,6 +16,10 @@ public static class ApplicationServicesExtension
 
         // Add Mediator behaviors
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingPipelineBehavior<,>));
+        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
+        
+        // Add FluentValidators
+        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
         return services;
     }

@@ -43,7 +43,8 @@ public class BlogController : BaseController
 
         return getCategoryResult.Match<CategoryDto, IActionResult>(
             onSuccess: () => Ok(getCategoryResult.Value),
-            onError: BadRequest);
+            onError: error => StatusCode(error.StatusCode, getCategoryResult.Error),
+            onErrors: BadRequest);
     }
 
     [HttpPost("category/create")] // /api/blog/category/create
@@ -54,7 +55,8 @@ public class BlogController : BaseController
 
         return createCategoryResult.Match<CategoryDto, IActionResult>(
             onSuccess: () => Ok(createCategoryResult.Value),
-            onError: BadRequest);
+            onError: error => StatusCode(error.StatusCode, error),
+            onErrors: BadRequest);
     }
 
     [HttpPut("category/edit/{id:guid}")] // /api/blog/category/edit/{id}
@@ -65,7 +67,8 @@ public class BlogController : BaseController
 
         return editCategoryResult.Match<CategoryActionDto, IActionResult>(
             onSuccess: () => Ok(editCategoryResult.Value),
-            onError: BadRequest);
+            onError: error => StatusCode(error.StatusCode, error),
+            onErrors: BadRequest);
     }
 
     [HttpDelete("category/delete/{id:guid}")] // /api/blog/category/delete/{id}
@@ -76,7 +79,8 @@ public class BlogController : BaseController
 
         return deleteCategoryResult.Match<CategoryDto, IActionResult>(
             onSuccess: NoContent,
-            onError: BadRequest);
+            onError: error => StatusCode(deleteCategoryResult.Error.StatusCode, error),
+            onErrors: BadRequest);
     }
 
     [HttpGet("posts")] // /api/blog/posts
@@ -86,7 +90,7 @@ public class BlogController : BaseController
             await _mediator.Send(new GetAllPostsQuery());
         return Ok(getPostsResult.Value);
     }
-    
+
     [HttpGet("post/{id:guid}")] // /api/blog/post/{id}
     public async Task<IActionResult> GetPostById(Guid id)
     {
@@ -95,7 +99,8 @@ public class BlogController : BaseController
 
         return getPostResult.Match<PostDto, IActionResult>(
             onSuccess: () => Ok(getPostResult.Value),
-            onError: NotFound);
+            onError: error => StatusCode(error.StatusCode, error),
+            onErrors: BadRequest);
     }
 
     [HttpPost("post/create")] // /api/blog/post/create
@@ -106,7 +111,8 @@ public class BlogController : BaseController
 
         return createPostResult.Match<PostDto, IActionResult>(
             onSuccess: () => Ok(createPostResult.Value),
-            onError: BadRequest);
+            onError: error => StatusCode(error.StatusCode, error),
+            onErrors: BadRequest);
     }
 
     [HttpPut("post/edit/{id:guid}")] // /api/post/edit/{id}
@@ -117,7 +123,8 @@ public class BlogController : BaseController
 
         return updatePostResult.Match<PostDto, IActionResult>(
             onSuccess: () => Ok(updatePostResult.Value),
-            onError: BadRequest);
+            onError: error => StatusCode(error.StatusCode, error),
+            onErrors: BadRequest);
     }
 
     [HttpDelete("post/delete/{id:guid}")] // /api/post/delete/{id}
@@ -128,6 +135,7 @@ public class BlogController : BaseController
 
         return deletePostResult.Match<PostDto, IActionResult>(
             onSuccess: NoContent,
-            onError: NotFound);
+            onError: error => StatusCode(error.StatusCode, error),
+            onErrors: BadRequest);
     }
 }
