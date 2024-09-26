@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using System.Net;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using MusShop.Application.Dtos.Blog.Category;
 using MusShop.Application.Dtos.Blog.Post;
@@ -27,15 +28,33 @@ public class BlogController : BaseController
         _mediator = mediator;
     }
 
+    /// <summary>
+    /// Receives all blog categories
+    /// </summary>
+    /// <returns></returns>
+    /// <response code="200">Successfully obtaining a blog categories</response>
     [HttpGet("categories")] // /api/blog/categories
+    [Produces("application/json")]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
     public async Task<IActionResult> GetAllCategories()
     {
         DomainResult<IEnumerable<CategoryDto>> getCategoriesResult =
             await _mediator.Send(new GetAllCategoriesQuery());
+
         return Ok(getCategoriesResult.Value);
     }
 
+    /// <summary>
+    /// Receives blog category by ID
+    /// </summary>
+    /// <param name="id">Category id</param>
+    /// <returns></returns>
+    /// <response code="200">Successfully obtaining a blog category by ID</response>
+    /// <response code="404">Category with the specified ID not found</response>
     [HttpGet("category/{id:guid}")] // /api/blog/category/{id}
+    [Produces("application/json")]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> GetCategoryById(Guid id)
     {
         DomainResult<CategoryDto> getCategoryResult =
@@ -47,7 +66,25 @@ public class BlogController : BaseController
             onErrors: BadRequest);
     }
 
+    /// <summary>
+    /// Creates a new blog category and returns it
+    /// </summary>
+    /// <remarks>
+    ///     Request example:
+    ///
+    ///         POST /api/blog/category/create
+    ///         {
+    ///             "CategoryName": "Some category name"
+    ///         }
+    /// </remarks>
+    /// <param name="categoryActionDto">Category</param>
+    /// <returns></returns>
+    /// <response code="200">Category successfully created</response>
+    /// <response code="400">Error trying to create a category</response>
     [HttpPost("category/create")] // /api/blog/category/create
+    [Produces("application/json")]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> CreateCategory(CategoryActionDto categoryActionDto)
     {
         DomainResult<CategoryDto> createCategoryResult =
@@ -59,7 +96,28 @@ public class BlogController : BaseController
             onErrors: BadRequest);
     }
 
+    /// <summary>
+    /// Updates the blog category by its ID
+    /// </summary>
+    /// <remarks>
+    ///     Request example:
+    ///
+    ///         PUT /api/blog/category/edit/{id}
+    ///         {
+    ///             "CategoryName": "Some category name"
+    ///         }
+    /// </remarks>
+    /// <param name="id">Category ID</param>
+    /// <param name="editCategoryDto">Category</param>
+    /// <returns></returns>
+    /// <response code="200">Category successfully updated</response>
+    /// <response code="400">Error trying to update a category</response>
+    /// <response code="404">Category with the specified ID not found</response>
     [HttpPut("category/edit/{id:guid}")] // /api/blog/category/edit/{id}
+    [Produces("application/json")]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> EditCategory(Guid id, [FromBody] CategoryActionDto editCategoryDto)
     {
         DomainResult<CategoryActionDto> editCategoryResult =
@@ -71,7 +129,17 @@ public class BlogController : BaseController
             onErrors: BadRequest);
     }
 
+    /// <summary>
+    /// Deletes a blog category by its ID
+    /// </summary>
+    /// <param name="id">Category ID</param>
+    /// <returns></returns>
+    /// <response code="204">Successfully delete a blog category by ID</response>
+    /// <response code="404">Category with the specified ID not found</response>
     [HttpDelete("category/delete/{id:guid}")] // /api/blog/category/delete/{id}
+    [Produces("application/json")]
+    [ProducesResponseType((int)HttpStatusCode.NoContent)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> DeleteCategory(Guid id)
     {
         DomainResult<CategoryDto> deleteCategoryResult =
@@ -83,15 +151,33 @@ public class BlogController : BaseController
             onErrors: BadRequest);
     }
 
+    /// <summary>
+    /// Receives all blog posts
+    /// </summary>
+    /// <returns></returns>
+    /// <response code="200">Successfully obtaining a blog posts</response>
     [HttpGet("posts")] // /api/blog/posts
+    [Produces("application/json")]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
     public async Task<IActionResult> GetAllPosts()
     {
         DomainResult<IEnumerable<PostDto>> getPostsResult =
             await _mediator.Send(new GetAllPostsQuery());
+        
         return Ok(getPostsResult.Value);
     }
 
+    /// <summary>
+    /// Receives blog post by ID
+    /// </summary>
+    /// <param name="id">Post ID</param>
+    /// <returns></returns>
+    /// <response code="200">Successfully obtaining a blog post by ID</response>
+    /// <response code="404">Post the specified ID not found</response>
     [HttpGet("post/{id:guid}")] // /api/blog/post/{id}
+    [Produces("application/json")]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> GetPostById(Guid id)
     {
         DomainResult<PostDto> getPostResult =
@@ -103,7 +189,28 @@ public class BlogController : BaseController
             onErrors: BadRequest);
     }
 
+    /// <summary>
+    /// Creates a new blog post and returns it
+    /// </summary>
+    /// <remarks>
+    ///     Request example:
+    ///
+    ///         POST /api/blog/post/create
+    ///         {
+    ///             "Title": "Some title"
+    ///             "Description": "Some description"
+    ///             "ImageUrl": "Some image url"
+    ///             "CategoryId": "e1d47a95-bc41-4ec7-9922-5b311a46339b"
+    ///         }
+    /// </remarks>
+    /// <param name="createPostDto">Post</param>
+    /// <returns></returns>
+    /// <response code="200">Post successfully created</response>
+    /// <response code="400">Error trying to create a post</response>
     [HttpPost("post/create")] // /api/blog/post/create
+    [Produces("application/json")]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> CreatePost(PostActionDto createPostDto)
     {
         DomainResult<PostDto> createPostResult =
@@ -115,7 +222,31 @@ public class BlogController : BaseController
             onErrors: BadRequest);
     }
 
+    /// <summary>
+    /// Updates the blog post by its ID
+    /// </summary>
+    /// <remarks>
+    ///     Request example:
+    ///
+    ///         PUT /api/blog/post/update/{id}
+    ///         {
+    ///             "Title": "Some title"
+    ///             "Description": "Some description"
+    ///             "ImageUrl": "Some image url"
+    ///             "CategoryId": "e1d47a95-bc41-4ec7-9922-5b311a46339b"
+    ///         }
+    /// </remarks>
+    /// <param name="updatePostDto">Post</param>
+    /// <param name="id">Post ID</param>
+    /// <returns></returns>
+    /// <response code="200">Post successfully updated</response>
+    /// <response code="400">Error trying to update a post</response>
+    /// <response code="404">Post with the specified ID not found</response>
     [HttpPut("post/edit/{id:guid}")] // /api/post/edit/{id}
+    [Produces("application/json")]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> EditPost(Guid id, PostActionDto updatePostDto)
     {
         DomainResult<PostDto> updatePostResult =
@@ -127,7 +258,17 @@ public class BlogController : BaseController
             onErrors: BadRequest);
     }
 
+    /// <summary>
+    /// Deletes a blog post by its ID
+    /// </summary>
+    /// <param name="id">Post ID</param>
+    /// <returns></returns>
+    /// <response code="204">Successfully delete a blog post by ID</response>
+    /// <response code="404">Post with the specified ID not found</response>
     [HttpDelete("post/delete/{id:guid}")] // /api/post/delete/{id}
+    [Produces("application/json")]
+    [ProducesResponseType((int)HttpStatusCode.NoContent)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> DeletePost(Guid id)
     {
         DomainResult<PostDto> deletePostResult =

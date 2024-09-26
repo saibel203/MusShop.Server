@@ -24,7 +24,7 @@ public class UpdatePostCommandTests : BaseUnitTest
 
         UpdatePostCommand invalidCommand = new UpdatePostCommand(postActionDto, id)
         {
-            PostActionDto = new PostActionDto { Title = string.Empty }
+            PostActionDto = new PostActionDto { Title = string.Empty, Description = string.Empty }
         };
 
         Task<DomainResult<PostDto>> Next() =>
@@ -60,7 +60,7 @@ public class UpdatePostCommandTests : BaseUnitTest
 
         UpdatePostCommand invalidCommand = new UpdatePostCommand(postActionDto, id)
         {
-            PostActionDto = new PostActionDto { Title = GenerateCustomLengthString(201) }
+            PostActionDto = new PostActionDto { Title = GenerateCustomLengthString(201), Description = string.Empty }
         };
 
         Task<DomainResult<PostDto>> Next() =>
@@ -96,7 +96,7 @@ public class UpdatePostCommandTests : BaseUnitTest
 
         UpdatePostCommand invalidCommand = new UpdatePostCommand(postActionDto, id)
         {
-            PostActionDto = new PostActionDto { Description = string.Empty }
+            PostActionDto = new PostActionDto { Description = string.Empty, Title = string.Empty }
         };
 
         Task<DomainResult<PostDto>> Next() =>
@@ -117,7 +117,7 @@ public class UpdatePostCommandTests : BaseUnitTest
 
         await UnitOfWork.DidNotReceive().CommitAsync(Arg.Any<CancellationToken>());
     }
-    
+
     [Theory, AutoNSubstituteData]
     public async Task UpdatePost_MaxLengthImageUrl_ReturnErrorResponse(
         PostActionDto postActionDto, Guid id)
@@ -132,7 +132,8 @@ public class UpdatePostCommandTests : BaseUnitTest
 
         UpdatePostCommand invalidCommand = new UpdatePostCommand(postActionDto, id)
         {
-            PostActionDto = new PostActionDto { ImageUrl = GenerateCustomLengthString(1001) }
+            PostActionDto = new PostActionDto
+                { ImageUrl = GenerateCustomLengthString(1001), Title = string.Empty, Description = string.Empty }
         };
 
         Task<DomainResult<PostDto>> Next() =>
@@ -153,7 +154,7 @@ public class UpdatePostCommandTests : BaseUnitTest
 
         await UnitOfWork.DidNotReceive().CommitAsync(Arg.Any<CancellationToken>());
     }
-    
+
     [Theory, AutoNSubstituteData]
     public async Task UpdatePost_EmptyCategory_ReturnErrorResponse(
         PostActionDto postActionDto, Guid id)
@@ -168,7 +169,8 @@ public class UpdatePostCommandTests : BaseUnitTest
 
         UpdatePostCommand invalidCommand = new UpdatePostCommand(postActionDto, id)
         {
-            PostActionDto = new PostActionDto { CategoryId = Guid.Empty }
+            PostActionDto = new PostActionDto
+                { CategoryId = Guid.Empty, Title = string.Empty, Description = string.Empty }
         };
 
         Task<DomainResult<PostDto>> Next() =>
@@ -189,7 +191,7 @@ public class UpdatePostCommandTests : BaseUnitTest
 
         await UnitOfWork.DidNotReceive().CommitAsync(Arg.Any<CancellationToken>());
     }
-    
+
     [Theory, AutoNSubstituteData]
     public async Task UpdatePost_NonExistingPostWithId_ReturnErrorResponse(
         PostActionDto postActionDto, Guid id)
