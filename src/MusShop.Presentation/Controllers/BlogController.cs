@@ -33,7 +33,7 @@ public class BlogController : BaseController
     /// </summary>
     /// <returns></returns>
     /// <response code="200">Successfully obtaining a blog categories</response>
-    [HttpGet("categories")] // /api/blog/categories
+    [HttpGet("category/all")] // /api/blog/category/all
     [Produces("application/json")]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     public async Task<IActionResult> GetAllCategories()
