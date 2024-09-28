@@ -1,5 +1,9 @@
 using Hangfire;
 using Hangfire.Dashboard;
+using HealthChecks.UI.Client;
+using HealthChecks.UI.Configuration;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using MusShop.Api;
 using MusShop.Application;
 using MusShop.Application.UseCases;
@@ -20,6 +24,7 @@ builder.Services.AddPersistenceServices(configuration);
 builder.Services.AddApplicationDtoService();
 builder.Services.AddApplicationServices();
 builder.Services.AddBaseServices();
+builder.Services.AddHealthChecksServices(configuration);
 
 WebApplication app = builder.Build();
 IWebHostEnvironment environment = app.Environment;
@@ -30,11 +35,23 @@ DashboardOptions hangfireDashboardOptions = new DashboardOptions
     Authorization = new List<IDashboardAuthorizationFilter>()
 };
 
+HealthCheckOptions healthCheckOptions = new HealthCheckOptions
+{
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
+    AllowCachingResponses = true,
+    ResultStatusCodes =
+    {
+        [HealthStatus.Healthy] = StatusCodes.Status200OK,
+        [HealthStatus.Degraded] = StatusCodes.Status500InternalServerError,
+        [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable
+    }
+};
+
 if (environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
-    
+    app.UseSwaggerUI(options => { options.DisplayRequestDuration(); });
+
     using IServiceScope scope = app.Services.CreateScope();
 
     InitializeInfrastructureDbContext initInfrastructureContextInitialize =
@@ -55,6 +72,9 @@ app.UseExceptionMiddleware();
 
 app.UseHttpsRedirection();
 
+app.MapHealthChecks("/health", healthCheckOptions);
+app.UseHealthChecksUI(GetUiHealthCheckOptions);
+
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -69,3 +89,9 @@ app.UseRouting();
 app.MapControllers();
 
 app.Run();
+
+static void GetUiHealthCheckOptions(Options options)
+{
+    options.UIPath = "/health-ui";
+    options.ApiPath = "/health-ui-api";
+}
