@@ -10,7 +10,8 @@ public interface IGenericRepository<TEntity, in TFilter>
 {
     Task<TEntity?> GetById(Guid id);
     
-    Task<PaginatedList<TEntity>> GetAll(TFilter? filter = null);
+    Task<PaginatedList<TEntity>> GetAll(TFilter? filter);
+    Task<IEnumerable<TEntity>> GetAll();
 
     IQueryable<TEntity> FindQueryable(Expression<Func<TEntity, bool>> expression,
         Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null);

@@ -22,7 +22,7 @@ public class GenericRepository<TEntity, TFilter> : IGenericRepository<TEntity, T
         return await Context.Set<TEntity>().FindAsync(id);
     }
 
-    public async Task<PaginatedList<TEntity>> GetAll(TFilter? filter = null)
+    public async Task<PaginatedList<TEntity>> GetAll(TFilter? filter)
     {
         IQueryable<TEntity> query = Context.Set<TEntity>().AsQueryable();
         int totalRecords = await query.CountAsync();
@@ -44,6 +44,11 @@ public class GenericRepository<TEntity, TFilter> : IGenericRepository<TEntity, T
             new PaginatedList<TEntity>(result, filter?.PageIndex, totalRecords, filter?.PageSize);
 
         return pageResult;
+    }
+
+    public async Task<IEnumerable<TEntity>> GetAll()
+    {
+        return await Context.Set<TEntity>().ToListAsync();
     }
 
     public IQueryable<TEntity> FindQueryable(Expression<Func<TEntity, bool>> expression,

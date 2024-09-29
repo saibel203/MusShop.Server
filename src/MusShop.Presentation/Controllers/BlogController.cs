@@ -40,7 +40,7 @@ public class BlogController : BaseController
     [ProducesResponseType((int)HttpStatusCode.OK)]
     public async Task<IActionResult> GetAllCategories()
     {
-        DomainResult<PaginatedList<CategoryDto>> getCategoriesResult =
+        DomainResult<IEnumerable<CategoryDto>> getCategoriesResult =
             await _mediator.Send(new GetAllCategoriesQuery());
 
         return Ok(getCategoriesResult.Value);
