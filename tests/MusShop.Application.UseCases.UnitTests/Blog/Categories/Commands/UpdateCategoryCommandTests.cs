@@ -2,6 +2,7 @@
 using MusShop.Application.Dtos.Blog.Category;
 using MusShop.Application.UseCases.Commons.Behaviors;
 using MusShop.Application.UseCases.Features.Blog.Categories.Commands.UpdateCategoryCommand;
+using MusShop.Contracts.Filters;
 using MusShop.Domain.Model.Entities.Blog;
 using MusShop.Domain.Model.ResultItems.ErrorsDocumentation;
 using NSubstitute.ReturnsExtensions;
@@ -89,7 +90,7 @@ public class UpdateCategoryCommandTests : BaseUnitTest
         // Arrange
         UpdateCategoryHandler commandHandler = new UpdateCategoryHandler(UnitOfWork, Mapper);
 
-        UnitOfWork.GetRepository<Category>().GetById(categoryId).ReturnsNull();
+        UnitOfWork.GetRepository<Category, CategoryFilter>().GetById(categoryId).ReturnsNull();
 
         // Act
         DomainResult<CategoryActionDto> updateCategoryResult =
@@ -113,7 +114,7 @@ public class UpdateCategoryCommandTests : BaseUnitTest
         // Arrange
         UpdateCategoryHandler commandHandler = new UpdateCategoryHandler(UnitOfWork, Mapper);
 
-        UnitOfWork.GetRepository<Category>().GetById(guid).Returns(category);
+        UnitOfWork.GetRepository<Category, CategoryFilter>().GetById(guid).Returns(category);
 
         // Act
         DomainResult<CategoryActionDto> updatePostResult =
@@ -128,7 +129,7 @@ public class UpdateCategoryCommandTests : BaseUnitTest
         updatePostResult.Errors.ShouldBeEmpty();
         updatePostResult.Value.ShouldNotBeNull();
 
-        UnitOfWork.GetRepository<Category>().Received(BaseReceivedCount).Update(Arg.Any<Category>());
+        UnitOfWork.GetRepository<Category, CategoryFilter>().Received(BaseReceivedCount).Update(Arg.Any<Category>());
         await UnitOfWork.Received(BaseReceivedCount).CommitAsync(CancellationToken.None);
     }
 }

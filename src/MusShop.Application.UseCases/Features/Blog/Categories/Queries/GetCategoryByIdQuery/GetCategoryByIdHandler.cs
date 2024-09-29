@@ -2,8 +2,9 @@
 using MediatR;
 using MusShop.Application.Dtos.Blog.Category;
 using MusShop.Application.UseCases.Commons;
+using MusShop.Contracts.Filters;
+using MusShop.Contracts.RepositoryAbstractions.Base;
 using MusShop.Domain.Model.Entities.Blog;
-using MusShop.Domain.Model.RepositoryAbstractions.Base;
 using MusShop.Domain.Model.ResultItems;
 using MusShop.Domain.Model.ResultItems.ErrorsDocumentation;
 
@@ -19,7 +20,7 @@ public class GetCategoryByIdHandler
     public async Task<DomainResult<CategoryDto>> Handle(GetCategoryByIdQuery request,
         CancellationToken cancellationToken)
     {
-        Category? category = await UnitOfWork.GetRepository<Category>().GetById(request.Id);
+        Category? category = await UnitOfWork.GetRepository<Category, CategoryFilter>().GetById(request.Id);
 
         if (category is null)
         {

@@ -1,5 +1,6 @@
 ﻿using MusShop.Application.Dtos.Blog.Category;
 using MusShop.Application.UseCases.Features.Blog.Categories.Queries.GetAllCategoriesQuery;
+using MusShop.Contracts.Filters;
 using MusShop.Domain.Model.Entities.Blog;
 
 namespace MusShop.Application.UseCases.UnitTests.Blog.Categories.Queries;
@@ -8,14 +9,14 @@ public class GetAllCategoriesQueryTests : BaseUnitTest
 {
     [Theory, AutoNSubstituteData]
     public async Task GetAllCategories_NotEmptyResultList_ReturnCategoriesList(
-        IReadOnlyList<Category> expectedResult)
+        List<Category> expectedResult)
     {
         // Arrange
         GetAllCategoriesHandler queryHandler =
             new GetAllCategoriesHandler(UnitOfWork, Mapper);
         int expectedResultCount = expectedResult.Count;
 
-        UnitOfWork.GetRepository<Category>().GetAll().Returns(expectedResult.AsEnumerable());
+        UnitOfWork.GetRepository<Category, CategoryFilter>().GetAll().Returns(expectedResult.AsEnumerable());
 
         // Act
         DomainResult<IEnumerable<CategoryDto>> getAllCategoriesResult =
@@ -39,7 +40,8 @@ public class GetAllCategoriesQueryTests : BaseUnitTest
         GetAllCategoriesHandler queryHandler =
             new GetAllCategoriesHandler(UnitOfWork, Mapper);
 
-        UnitOfWork.GetRepository<Category>().GetAll().Returns(Enumerable.Empty<Category>());
+        UnitOfWork.GetRepository<Category, CategoryFilter>().GetAll()
+            .Returns(Enumerable.Empty<Category>());
 
         // Act
         DomainResult<IEnumerable<CategoryDto>> getAllCategoriesResult =

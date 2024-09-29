@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MusShop.Contracts\MusShop.Contracts.csproj" />
     <ProjectReference Include="..\MusShop.Domain.Model\MusShop.Domain.Model.csproj" />
     <ProjectReference Include="..\MusShop.Domain.Services\MusShop.Domain.Services.csproj" />
     <ProjectReference Include="..\MusShop.Jobs\MusShop.Jobs.csproj" />

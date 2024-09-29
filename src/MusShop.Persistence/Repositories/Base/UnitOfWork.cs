@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MusShop.Contracts.RepositoryAbstractions.Base;
+using MusShop.Contracts.Responses;
 using MusShop.Domain.Model.Entities.Base;
-using MusShop.Domain.Model.RepositoryAbstractions.Base;
 
 namespace MusShop.Persistence.Repositories.Base;
 
@@ -16,15 +17,16 @@ public class UnitOfWork : IUnitOfWork
         _repositories = new Dictionary<Type, object>();
     }
 
-    public IGenericRepository<TEntity> GetRepository<TEntity>()
+    public IGenericRepository<TEntity, TFilter> GetRepository<TEntity, TFilter>()
         where TEntity : BaseEntity
+        where TFilter : BaseFilter
     {
         if (_repositories.ContainsKey(typeof(TEntity)))
         {
-            return (IGenericRepository<TEntity>)_repositories[typeof(TEntity)];
+            return (IGenericRepository<TEntity, TFilter>)_repositories[typeof(TEntity)];
         }
 
-        var repository = new GenericRepository<TEntity>(_context);
+        var repository = new GenericRepository<TEntity, TFilter>(_context);
         _repositories.Add(typeof(TEntity), repository);
         return repository;
     }

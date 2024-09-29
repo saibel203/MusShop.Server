@@ -1,4 +1,4 @@
-﻿using MusShop.Domain.Model.InfrastructureServiceAbstractions;
+﻿using MusShop.Contracts.InfrastructureServiceAbstractions;
 
 namespace MusShop.Jobs;
 

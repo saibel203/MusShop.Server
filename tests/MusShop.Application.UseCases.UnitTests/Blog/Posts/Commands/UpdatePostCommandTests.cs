@@ -2,6 +2,7 @@
 using MusShop.Application.Dtos.Blog.Post;
 using MusShop.Application.UseCases.Commons.Behaviors;
 using MusShop.Application.UseCases.Features.Blog.Posts.Commands.UpdatePostCommand;
+using MusShop.Contracts.Filters;
 using MusShop.Domain.Model.Entities.Blog;
 using MusShop.Domain.Model.ResultItems.ErrorsDocumentation;
 using NSubstitute.ReturnsExtensions;
@@ -199,7 +200,7 @@ public class UpdatePostCommandTests : BaseUnitTest
         // Arrange
         UpdatePostHandler commandHandler = new UpdatePostHandler(UnitOfWork, Mapper);
 
-        UnitOfWork.GetRepository<Post>().GetById(id).ReturnsNull();
+        UnitOfWork.GetRepository<Post, PostFilter>().GetById(id).ReturnsNull();
 
         // Act
         DomainResult<PostDto> updatePostResult =
@@ -222,7 +223,7 @@ public class UpdatePostCommandTests : BaseUnitTest
         // Arrange
         UpdatePostHandler commandHandler = new UpdatePostHandler(UnitOfWork, Mapper);
 
-        UnitOfWork.GetRepository<Post>().GetById(id).Returns(post);
+        UnitOfWork.GetRepository<Post, PostFilter>().GetById(id).Returns(post);
 
         // Act
         DomainResult<PostDto> updatePostResult =
@@ -237,7 +238,7 @@ public class UpdatePostCommandTests : BaseUnitTest
         updatePostResult.Errors.ShouldBeEmpty();
         updatePostResult.Value.ShouldNotBeNull();
 
-        UnitOfWork.GetRepository<Post>().Received(BaseReceivedCount).Update(Arg.Any<Post>());
+        UnitOfWork.GetRepository<Post, PostFilter>().Received(BaseReceivedCount).Update(Arg.Any<Post>());
         await UnitOfWork.Received(BaseReceivedCount).CommitAsync(CancellationToken.None);
     }
 }

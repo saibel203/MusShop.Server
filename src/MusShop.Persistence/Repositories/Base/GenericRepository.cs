@@ -1,12 +1,14 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using MusShop.Contracts.RepositoryAbstractions.Base;
+using MusShop.Contracts.Responses;
 using MusShop.Domain.Model.Entities.Base;
-using MusShop.Domain.Model.RepositoryAbstractions.Base;
 
 namespace MusShop.Persistence.Repositories.Base;
 
-public class GenericRepository<TEntity> : IGenericRepository<TEntity>
+public class GenericRepository<TEntity, TFilter> : IGenericRepository<TEntity, TFilter>
     where TEntity : BaseEntity
+    where TFilter : BaseFilter
 {
     protected MusShopDataDbContext Context;
 
@@ -18,6 +20,30 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity>
     public async Task<TEntity?> GetById(Guid id)
     {
         return await Context.Set<TEntity>().FindAsync(id);
+    }
+
+    public async Task<PaginatedList<TEntity>> GetAll(TFilter? filter)
+    {
+        IQueryable<TEntity> query = Context.Set<TEntity>().AsQueryable();
+        int totalRecords = await query.CountAsync();
+
+        if (filter is not null)
+        {
+            int pageSize = 
+                filter.PageSize is <= 0 or null ? 6 : (int)filter.PageSize;
+            int pageIndex = 
+                filter.PageIndex is <= 0 or null ? 0 : (int)filter.PageIndex;
+
+            query = query
+                .Skip(pageSize * pageIndex)
+                .Take(pageSize);
+        }
+        
+        List<TEntity> result = await query.ToListAsync();
+        PaginatedList<TEntity> pageResult = 
+            new PaginatedList<TEntity>(result, filter?.PageIndex, totalRecords, filter?.PageSize);
+
+        return pageResult;
     }
 
     public async Task<IEnumerable<TEntity>> GetAll()

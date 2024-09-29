@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using MusShop.Application.Dtos.Blog.Category;
 using MusShop.Application.UseCases.Features.Blog.Categories.Queries.GetCategoryByIdQuery;
+using MusShop.Contracts.Filters;
 using MusShop.Domain.Model.Entities.Blog;
 using MusShop.Domain.Model.ResultItems.ErrorsDocumentation;
 using NSubstitute.ReturnsExtensions;
@@ -16,7 +17,7 @@ public class GetCategoryByIdQueryTests : BaseUnitTest
         // Arrange
         GetCategoryByIdHandler queryHandler = new GetCategoryByIdHandler(UnitOfWork, Mapper);
 
-        UnitOfWork.GetRepository<Category>().GetById(categoryId).ReturnsNull();
+        UnitOfWork.GetRepository<Category, CategoryFilter>().GetById(categoryId).ReturnsNull();
 
         // Act
         DomainResult<CategoryDto> getCategoryByIdResult =
@@ -39,7 +40,7 @@ public class GetCategoryByIdQueryTests : BaseUnitTest
         // Arrange
         GetCategoryByIdHandler queryHandler = new GetCategoryByIdHandler(UnitOfWork, Mapper);
 
-        UnitOfWork.GetRepository<Category>().GetById(categoryId).Returns(category);
+        UnitOfWork.GetRepository<Category, CategoryFilter>().GetById(categoryId).Returns(category);
 
         // Act
         DomainResult<CategoryDto> getCategoryByIdResult =

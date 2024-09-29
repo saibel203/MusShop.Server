@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using MusShop.Application.Dtos.Blog.Post;
 using MusShop.Application.UseCases.Features.Blog.Posts.Queries.GetPostByIdQuery;
+using MusShop.Contracts.Filters;
 using MusShop.Domain.Model.Entities.Blog;
 using MusShop.Domain.Model.ResultItems.ErrorsDocumentation;
 using NSubstitute.ReturnsExtensions;
@@ -16,7 +17,7 @@ public class GetPostByIdQueryTests : BaseUnitTest
         // Arrange
         GetPostByIdHandler queryHandler = new GetPostByIdHandler(UnitOfWork, Mapper);
 
-        UnitOfWork.GetRepository<Post>().GetById(postId).ReturnsNull();
+        UnitOfWork.GetRepository<Post, PostFilter>().GetById(postId).ReturnsNull();
 
         // Act
         DomainResult<PostDto> getPostByIdResult =
@@ -39,7 +40,7 @@ public class GetPostByIdQueryTests : BaseUnitTest
         // Arrange
         GetPostByIdHandler queryHandler = new GetPostByIdHandler(UnitOfWork, Mapper);
 
-        UnitOfWork.GetRepository<Post>().GetById(postId).Returns(post);
+        UnitOfWork.GetRepository<Post, PostFilter>().GetById(postId).Returns(post);
 
         // Act
         DomainResult<PostDto> getPostByIdResult =

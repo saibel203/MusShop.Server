@@ -3,7 +3,7 @@ using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using MusShop.Domain.Model.InfrastructureServiceAbstractions;
+using MusShop.Contracts.InfrastructureServiceAbstractions;
 using MusShop.Infrastructure.Database;
 using SendGrid;
 using Serilog.Events;

@@ -1,13 +1,16 @@
 ﻿using System.Linq.Expressions;
+using MusShop.Contracts.Responses;
 using MusShop.Domain.Model.Entities.Base;
 
-namespace MusShop.Domain.Model.RepositoryAbstractions.Base;
+namespace MusShop.Contracts.RepositoryAbstractions.Base;
 
-public interface IGenericRepository<TEntity>
+public interface IGenericRepository<TEntity, in TFilter>
     where TEntity : BaseEntity
+    where TFilter : BaseFilter
 {
     Task<TEntity?> GetById(Guid id);
-
+    
+    Task<PaginatedList<TEntity>> GetAll(TFilter? filter);
     Task<IEnumerable<TEntity>> GetAll();
 
     IQueryable<TEntity> FindQueryable(Expression<Func<TEntity, bool>> expression,
