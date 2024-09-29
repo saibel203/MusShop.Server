@@ -13,6 +13,8 @@ using MusShop.Application.UseCases.Features.Blog.Posts.Commands.DeletePostComman
 using MusShop.Application.UseCases.Features.Blog.Posts.Commands.UpdatePostCommand;
 using MusShop.Application.UseCases.Features.Blog.Posts.Queries.GetAllPostsQuery;
 using MusShop.Application.UseCases.Features.Blog.Posts.Queries.GetPostByIdQuery;
+using MusShop.Contracts.Filters;
+using MusShop.Contracts.Responses;
 using MusShop.Domain.Model.ResultItems;
 using MusShop.Domain.Model.ResultItems.Extensions;
 using MusShop.Presentation.Controllers.Base;
@@ -38,7 +40,7 @@ public class BlogController : BaseController
     [ProducesResponseType((int)HttpStatusCode.OK)]
     public async Task<IActionResult> GetAllCategories()
     {
-        DomainResult<IEnumerable<CategoryDto>> getCategoriesResult =
+        DomainResult<PaginatedList<CategoryDto>> getCategoriesResult =
             await _mediator.Send(new GetAllCategoriesQuery());
 
         return Ok(getCategoriesResult.Value);
@@ -159,10 +161,10 @@ public class BlogController : BaseController
     [HttpGet("posts")] // /api/blog/posts
     [Produces("application/json")]
     [ProducesResponseType((int)HttpStatusCode.OK)]
-    public async Task<IActionResult> GetAllPosts()
+    public async Task<IActionResult> GetAllPosts([FromQuery] PostFilter? filter)
     {
-        DomainResult<IEnumerable<PostDto>> getPostsResult =
-            await _mediator.Send(new GetAllPostsQuery());
+        DomainResult<PaginatedList<PostDto>> getPostsResult =
+            await _mediator.Send(new GetAllPostsQuery(filter));
         
         return Ok(getPostsResult.Value);
     }

@@ -1,5 +1,5 @@
 ﻿using MapsterMapper;
-using MusShop.Domain.Model.RepositoryAbstractions.Base;
+using MusShop.Contracts.RepositoryAbstractions.Base;
 
 namespace MusShop.Application.UseCases.Commons;
 

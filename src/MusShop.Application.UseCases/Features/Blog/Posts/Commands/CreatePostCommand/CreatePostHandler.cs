@@ -2,8 +2,9 @@
 using MediatR;
 using MusShop.Application.Dtos.Blog.Post;
 using MusShop.Application.UseCases.Commons;
+using MusShop.Contracts.Filters;
+using MusShop.Contracts.RepositoryAbstractions.Base;
 using MusShop.Domain.Model.Entities.Blog;
-using MusShop.Domain.Model.RepositoryAbstractions.Base;
 using MusShop.Domain.Model.ResultItems;
 
 namespace MusShop.Application.UseCases.Features.Blog.Posts.Commands.CreatePostCommand;
@@ -19,7 +20,7 @@ public class CreatePostHandler : BaseFeatureConfigs, IRequestHandler<CreatePostC
     {
         Post post = Mapper.Map<Post>(request.PostActionDto);
 
-        Post newPost = await UnitOfWork.GetRepository<Post>().Add(post);
+        Post newPost = await UnitOfWork.GetRepository<Post, PostFilter>().Add(post);
         await UnitOfWork.CommitAsync(cancellationToken);
 
         PostDto postDto = Mapper.Map<PostDto>(newPost);

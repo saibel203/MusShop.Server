@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MusShop.Domain.Model.InfrastructureServiceAbstractions;
+using MusShop.Contracts.InfrastructureServiceAbstractions;
 using MusShop.Infrastructure.Database;
 using Serilog;
 

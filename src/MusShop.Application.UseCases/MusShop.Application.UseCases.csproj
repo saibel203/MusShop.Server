@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MusShop.Application.Dto\MusShop.Application.Dto.csproj" />
+    <ProjectReference Include="..\MusShop.Contracts\MusShop.Contracts.csproj" />
     <ProjectReference Include="..\MusShop.Domain.Model\MusShop.Domain.Model.csproj" />
     <ProjectReference Include="..\MusShop.Persistence\MusShop.Persistence.csproj" />
   </ItemGroup>

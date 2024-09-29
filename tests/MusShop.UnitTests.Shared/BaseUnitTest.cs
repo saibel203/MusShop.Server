@@ -2,7 +2,7 @@
 using FluentValidation.Results;
 using MapsterMapper;
 using MusShop.Application.UseCases.Commons.Behaviors;
-using MusShop.Domain.Model.RepositoryAbstractions.Base;
+using MusShop.Contracts.RepositoryAbstractions.Base;
 using MusShop.Domain.Model.ResultItems;
 using MusShop.UnitTests.Shared.Mocks;
 using NSubstitute;

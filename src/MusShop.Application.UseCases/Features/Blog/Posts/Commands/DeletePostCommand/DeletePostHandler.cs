@@ -2,8 +2,9 @@
 using MediatR;
 using MusShop.Application.Dtos.Blog.Post;
 using MusShop.Application.UseCases.Commons;
+using MusShop.Contracts.Filters;
+using MusShop.Contracts.RepositoryAbstractions.Base;
 using MusShop.Domain.Model.Entities.Blog;
-using MusShop.Domain.Model.RepositoryAbstractions.Base;
 using MusShop.Domain.Model.ResultItems;
 using MusShop.Domain.Model.ResultItems.ErrorsDocumentation;
 
@@ -18,14 +19,14 @@ public class DeletePostHandler : BaseFeatureConfigs, IRequestHandler<DeletePostC
     public async Task<DomainResult<PostDto>> Handle(DeletePostCommand request,
         CancellationToken cancellationToken)
     {
-        Post? post = await UnitOfWork.GetRepository<Post>().GetById(request.Id);
+        Post? post = await UnitOfWork.GetRepository<Post, PostFilter>().GetById(request.Id);
 
         if (post is null)
         {
             return DomainResult<PostDto>.Failure(BlogErrors.PostNotFound);
         }
 
-        UnitOfWork.GetRepository<Post>().Delete(post);
+        UnitOfWork.GetRepository<Post, PostFilter>().Delete(post);
         await UnitOfWork.CommitAsync(cancellationToken);
 
         return DomainResult<PostDto>.Success(null!);

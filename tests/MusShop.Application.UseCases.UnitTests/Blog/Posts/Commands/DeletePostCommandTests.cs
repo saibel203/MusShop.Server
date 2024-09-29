@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using MusShop.Application.Dtos.Blog.Post;
 using MusShop.Application.UseCases.Features.Blog.Posts.Commands.DeletePostCommand;
+using MusShop.Contracts.Filters;
 using MusShop.Domain.Model.Entities.Blog;
 using MusShop.Domain.Model.ResultItems.ErrorsDocumentation;
 using NSubstitute.ReturnsExtensions;
@@ -16,7 +17,7 @@ public class DeletePostCommandTests : BaseUnitTest
         // Arrange
         DeletePostHandler commandHandler = new DeletePostHandler(UnitOfWork, Mapper);
 
-        UnitOfWork.GetRepository<Post>().GetById(postId).ReturnsNull();
+        UnitOfWork.GetRepository<Post, PostFilter>().GetById(postId).ReturnsNull();
 
         // Act
         DomainResult<PostDto> deletePostResult =
@@ -38,7 +39,7 @@ public class DeletePostCommandTests : BaseUnitTest
         // Arrange
         DeletePostHandler commandHandler = new DeletePostHandler(UnitOfWork, Mapper);
 
-        UnitOfWork.GetRepository<Post>().GetById(postId).Returns(post);
+        UnitOfWork.GetRepository<Post, PostFilter>().GetById(postId).Returns(post);
 
         // Act
         DomainResult<PostDto> deletePostResult =
@@ -52,7 +53,7 @@ public class DeletePostCommandTests : BaseUnitTest
         deletePostResult.Error.Code.ShouldBeEmpty();
         deletePostResult.Errors.ShouldBeEmpty();
         
-        UnitOfWork.GetRepository<Post>().Received(BaseReceivedCount).Delete(post);
+        UnitOfWork.GetRepository<Post, PostFilter>().Received(BaseReceivedCount).Delete(post);
         await UnitOfWork.Received(BaseReceivedCount).CommitAsync(CancellationToken.None);
     }
 }

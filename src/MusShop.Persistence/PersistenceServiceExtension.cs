@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using MusShop.Domain.Model.RepositoryAbstractions.Base;
-using MusShop.Domain.Model.RepositoryAbstractions.Blog;
+using MusShop.Contracts.RepositoryAbstractions.Base;
+using MusShop.Contracts.RepositoryAbstractions.Blog;
 using MusShop.Domain.Services.Helpers;
 using MusShop.Persistence.Repositories.Base;
 using MusShop.Persistence.Repositories.Blog;

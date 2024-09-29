@@ -1,6 +1,7 @@
 ﻿using MusShop.Application.Dtos.Blog.Post;
 using MusShop.Application.UseCases.Commons.Behaviors;
 using MusShop.Application.UseCases.Features.Blog.Posts.Commands.CreatePostCommand;
+using MusShop.Contracts.Filters;
 using MusShop.Domain.Model.Entities.Blog;
 using MusShop.Domain.Model.ResultItems.ErrorsDocumentation;
 
@@ -209,7 +210,7 @@ public class CreatePostCommandTests : BaseUnitTest
         createPostResult.Error.Code.ShouldBeEmpty();
         createPostResult.Errors.ShouldBeEmpty();
 
-        await UnitOfWork.GetRepository<Post>().Received(BaseReceivedCount).Add(Arg.Any<Post>());
+        await UnitOfWork.GetRepository<Post, PostFilter>().Received(BaseReceivedCount).Add(Arg.Any<Post>());
         await UnitOfWork.Received(BaseReceivedCount).CommitAsync(CancellationToken.None);
     }
 }

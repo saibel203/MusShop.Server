@@ -1,6 +1,7 @@
 ﻿using MusShop.Application.Dtos.Blog.Category;
 using MusShop.Application.UseCases.Commons.Behaviors;
 using MusShop.Application.UseCases.Features.Blog.Categories.Commands.CreateCategoryCommand;
+using MusShop.Contracts.Filters;
 using MusShop.Domain.Model.Entities.Blog;
 using MusShop.Domain.Model.ResultItems.ErrorsDocumentation;
 
@@ -100,7 +101,7 @@ public class CreateCategoryCommandTests : BaseUnitTest
         createPostResult.Errors.ShouldBeEmpty();
         createPostResult.Value.ShouldNotBeNull();
 
-        await UnitOfWork.GetRepository<Category>().Received(BaseReceivedCount).Add(Arg.Any<Category>());
+        await UnitOfWork.GetRepository<Category, CategoryFilter>().Received(BaseReceivedCount).Add(Arg.Any<Category>());
         await UnitOfWork.Received(BaseReceivedCount).CommitAsync(CancellationToken.None);
     }
 }

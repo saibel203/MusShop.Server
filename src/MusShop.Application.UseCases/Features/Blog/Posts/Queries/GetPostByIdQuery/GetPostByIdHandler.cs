@@ -2,8 +2,9 @@
 using MediatR;
 using MusShop.Application.Dtos.Blog.Post;
 using MusShop.Application.UseCases.Commons;
+using MusShop.Contracts.Filters;
+using MusShop.Contracts.RepositoryAbstractions.Base;
 using MusShop.Domain.Model.Entities.Blog;
-using MusShop.Domain.Model.RepositoryAbstractions.Base;
 using MusShop.Domain.Model.ResultItems;
 using MusShop.Domain.Model.ResultItems.ErrorsDocumentation;
 
@@ -18,7 +19,7 @@ public class GetPostByIdHandler : BaseFeatureConfigs, IRequestHandler<GetPostByI
     public async Task<DomainResult<PostDto>> Handle(GetPostByIdQuery request,
         CancellationToken cancellationToken)
     {
-        Post? post = await UnitOfWork.GetRepository<Post>().GetById(request.Id);
+        Post? post = await UnitOfWork.GetRepository<Post, PostFilter>().GetById(request.Id);
 
         if (post is null)
         {

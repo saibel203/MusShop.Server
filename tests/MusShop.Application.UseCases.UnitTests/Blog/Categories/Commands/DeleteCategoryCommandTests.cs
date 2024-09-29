@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using MusShop.Application.Dtos.Blog.Category;
 using MusShop.Application.UseCases.Features.Blog.Categories.Commands.DeleteCategoryCommand;
+using MusShop.Contracts.Filters;
 using MusShop.Domain.Model.Entities.Blog;
 using MusShop.Domain.Model.ResultItems.ErrorsDocumentation;
 using NSubstitute.ReturnsExtensions;
@@ -16,7 +17,7 @@ public class DeleteCategoryCommandTests : BaseUnitTest
         // Arrange
         DeleteCategoryHandler commandHandler = new DeleteCategoryHandler(UnitOfWork, Mapper);
 
-        UnitOfWork.GetRepository<Category>().GetById(categoryId).ReturnsNull();
+        UnitOfWork.GetRepository<Category, CategoryFilter>().GetById(categoryId).ReturnsNull();
 
         // Act
         DomainResult<CategoryDto> deleteCategoryResult =
@@ -39,7 +40,7 @@ public class DeleteCategoryCommandTests : BaseUnitTest
         // Arrange
         DeleteCategoryHandler commandHandler = new DeleteCategoryHandler(UnitOfWork, Mapper);
 
-        UnitOfWork.GetRepository<Category>().GetById(categoryId).Returns(category);
+        UnitOfWork.GetRepository<Category, CategoryFilter>().GetById(categoryId).Returns(category);
 
         // Act
         DomainResult<CategoryDto> deleteCategoryResult =
@@ -53,7 +54,7 @@ public class DeleteCategoryCommandTests : BaseUnitTest
         deleteCategoryResult.Error.Code.ShouldBeEmpty();
         deleteCategoryResult.Errors.ShouldBeEmpty();
         
-        UnitOfWork.GetRepository<Category>().Received(BaseReceivedCount).Delete(category);
+        UnitOfWork.GetRepository<Category, CategoryFilter>().Received(BaseReceivedCount).Delete(category);
         await UnitOfWork.Received(BaseReceivedCount).CommitAsync(CancellationToken.None);
     }
 }

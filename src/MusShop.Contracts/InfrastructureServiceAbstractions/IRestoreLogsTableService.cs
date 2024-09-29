@@ -1,4 +1,4 @@
-﻿namespace MusShop.Domain.Model.InfrastructureServiceAbstractions;
+﻿namespace MusShop.Contracts.InfrastructureServiceAbstractions;
 
 public interface IRestoreLogsTableService
 {
